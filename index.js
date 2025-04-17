@@ -162,6 +162,45 @@ class Tree {
 
     traverse(this.root);
   }
+  // 8. Write a height(value) function that returns the height of the node containing the given value. Height is defined as the number of edges in the longest path from that node to a leaf node. If the value is not found in the tree, the function should return null.
+  height(value) {
+    let node;
+    try {
+      node = this.findNode(value).target;
+    } catch {
+      return null;
+    }
+
+    function calcHeight(node) {
+      if (node === null) return -1;
+      const leftHeight = calcHeight(node.left);
+      const rightHeight = calcHeight(node.right);
+
+      return 1 + Math.max(leftHeight, rightHeight);
+    }
+
+    return calcHeight(node);
+  }
+  // 9. Write a depth(value) function that returns the depth of the node containing the given value. Depth is defined as the number of edges in the path from that node to the root node. If the value is not found in the tree, the function should return null.
+  depth(value) {
+    if (this.root === null) return -1;
+
+    let depth = 0;
+    let current = this.root;
+    while (value !== current.key) {
+      if (value < current.key && current.left !== null) {
+        current = current.left;
+        depth++;
+      } else if (value > current.key && current.right !== null) {
+        current = current.right;
+        depth++;
+      } else {
+        return null;
+      }
+    }
+
+    return depth;
+  }
 }
 
 // 3. Write a buildTree(array) function that takes an array of key (e.g., [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]) and turns it into a balanced binary tree full of Node objects appropriately placed (don’t forget to sort and remove duplicates!). The buildTree function should return the level-0 root node.
@@ -204,4 +243,4 @@ const array = [
 ];
 const tree = new Tree(array);
 console.log(prettyPrint(tree.root));
-tree.inOrder((node) => console.log(node.key));
+console.log(tree.depth(324));
