@@ -89,6 +89,36 @@ class Tree {
       current.right = new Node(value);
     }
   }
+  // 6. Write a levelOrder(callback) function that accepts a callback function as its parameter. levelOrder should traverse the tree in breadth-first level order and call the callback on each node as it traverses, passing the whole node as an argument, similarly to how Array.prototype.forEach might work for arrays. levelOrder may be implemented using either iteration or recursion (try implementing both!). If no callback function is provided, throw an Error reporting that a callback is required. Tip: You will want to use an array acting as a queue to keep track of all the child nodes that you have yet to traverse and to add new ones to the list.
+  levelOrder(callback) {
+    if (typeof callback !== 'function')
+      throw new Error('The argument must be a function!');
+
+    const queue = [this.root];
+
+    // Iterative method
+    /* let current = this.root;
+
+    while (queue.length > 0) {
+      if (current.left !== null) queue.push(current.left);
+      if (current.right !== null) queue.push(current.right);
+      callback(current);
+      queue.shift();
+      current = queue[0];
+    } */
+
+    // Recursive method
+    function traverse(node) {
+      if (queue.length === 0) return;
+      if (node.left !== null) queue.push(node.left);
+      if (node.right !== null) queue.push(node.right);
+      callback(node);
+      queue.shift();
+      traverse(queue[0]);
+    }
+
+    traverse(this.root);
+  }
 }
 
 // 3. Write a buildTree(array) function that takes an array of key (e.g., [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]) and turns it into a balanced binary tree full of Node objects appropriately placed (don’t forget to sort and remove duplicates!). The buildTree function should return the level-0 root node.
@@ -131,5 +161,4 @@ const array = [
 ];
 const tree = new Tree(array);
 console.log(prettyPrint(tree.root));
-tree.insert(32);
-console.log(prettyPrint(tree.root));
+tree.levelOrder((node) => console.log(node.key));
