@@ -24,7 +24,7 @@ class Tree {
       } else if (value > current.key && current.right !== null) {
         current = current.right;
       } else {
-        throw new Error("There's no node with such a");
+        throw new Error("There's no node with such a key.");
       }
     }
 
@@ -99,13 +99,13 @@ class Tree {
     // Iterative method
     /* let current = this.root;
 
-    while (queue.length > 0) {
-      if (current.left !== null) queue.push(current.left);
-      if (current.right !== null) queue.push(current.right);
-      callback(current);
-      queue.shift();
-      current = queue[0];
-    } */
+          while (queue.length > 0) {
+            if (current.left !== null) queue.push(current.left);
+            if (current.right !== null) queue.push(current.right);
+            callback(current);
+            queue.shift();
+            current = queue[0];
+          } */
 
     // Recursive method
     function traverse(node) {
@@ -201,6 +201,42 @@ class Tree {
 
     return depth;
   }
+  // 11. Write an isBalanced function that checks if the tree is balanced. A binary tree is considered balanced if, for every node in the tree, the height difference between its left and right subtrees is no more than 1, and both the left and right subtrees are also balanced.
+  isBalanced() {
+    const isBalancedUtil = (node) => {
+      if (node === null) return true;
+
+      let leftHeight, rightHeight;
+
+      if (node.left === null) {
+        leftHeight = -1;
+      } else {
+        leftHeight = this.height(node.left.key);
+      }
+
+      if (node.right === null) {
+        rightHeight = -1;
+      } else {
+        rightHeight = this.height(node.right.key);
+      }
+
+      if (
+        Math.abs(leftHeight - rightHeight) <= 1 &&
+        isBalancedUtil(node.left) &&
+        isBalancedUtil(node.right)
+      )
+        return true;
+
+      return false;
+    };
+    return isBalancedUtil(this.root);
+  }
+  // 11. Write a rebalance function that rebalances an unbalanced tree. Tip: You’ll want to use a traversal method to provide a new array to the buildTree function.
+  rebalance() {
+    const nodes = [];
+    this.inOrder((node) => nodes.push(node.key));
+    this.root = buildTree(nodes);
+  }
 }
 
 // 3. Write a buildTree(array) function that takes an array of key (e.g., [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]) and turns it into a balanced binary tree full of Node objects appropriately placed (don’t forget to sort and remove duplicates!). The buildTree function should return the level-0 root node.
@@ -243,4 +279,19 @@ const array = [
 ];
 const tree = new Tree(array);
 console.log(prettyPrint(tree.root));
-console.log(tree.depth(324));
+
+let i = Math.floor(Math.random() * (array.length - 1));
+const deleted = [];
+
+while (tree.isBalanced()) {
+  tree.deleteItem(array[i]);
+  deleted.push(array[i]);
+  array.splice(i, 1);
+  i = Math.floor(Math.random() * (array.length - 1));
+}
+
+console.log(`${deleted} deleted.`);
+console.log(prettyPrint(tree.root));
+
+tree.rebalance();
+console.log(prettyPrint(tree.root));
