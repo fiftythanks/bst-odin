@@ -1,6 +1,6 @@
 // 1. Build a Node class/factory. It should have an attribute for the key it stores as well as its left and right children.
 class Node {
-  constructor(key, left, right) {
+  constructor(key, left = null, right = null) {
     this.key = key;
     this.left = left;
     this.right = right;
@@ -67,6 +67,28 @@ class Tree {
       }
     }
   }
+  insert(value) {
+    let current = this.root;
+
+    while (
+      !(value < current.key && current.left === null) &&
+      !(value > current.key && current.left === null)
+    ) {
+      if (value < current.key) {
+        current = current.left;
+      } else if (value > current.key) {
+        current = current.right;
+      } else {
+        return;
+      }
+    }
+
+    if (value < current.key) {
+      current.left = new Node(value);
+    } else {
+      current.right = new Node(value);
+    }
+  }
 }
 
 // 3. Write a buildTree(array) function that takes an array of key (e.g., [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]) and turns it into a balanced binary tree full of Node objects appropriately placed (don’t forget to sort and remove duplicates!). The buildTree function should return the level-0 root node.
@@ -109,5 +131,5 @@ const array = [
 ];
 const tree = new Tree(array);
 console.log(prettyPrint(tree.root));
-tree.deleteItem(10);
+tree.insert(32);
 console.log(prettyPrint(tree.root));
