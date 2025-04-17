@@ -119,6 +119,49 @@ class Tree {
 
     traverse(this.root);
   }
+  // 7. Write inOrder(callback), preOrder(callback), and postOrder(callback) functions that also accept a callback as a parameter. Each of these functions should traverse the tree in their respective depth-first order and pass each node to the provided callback. The functions should throw an Error if no callback is given as an argument, like with levelOrder.
+  inOrder(callback) {
+    if (typeof callback !== 'function')
+      throw new Error('The argument must be a function!');
+
+    function traverse(node) {
+      if (node === null) return;
+
+      traverse(node.left);
+      callback(node);
+      traverse(node.right);
+    }
+
+    traverse(this.root);
+  }
+  preOrder(callback) {
+    if (typeof callback !== 'function')
+      throw new Error('The argument must be a function!');
+
+    function traverse(node) {
+      if (node === null) return;
+
+      callback(node);
+      traverse(node.left);
+      traverse(node.right);
+    }
+
+    traverse(this.root);
+  }
+  postOrder(callback) {
+    if (typeof callback !== 'function')
+      throw new Error('The argument must be a function!');
+
+    function traverse(node) {
+      if (node === null) return;
+
+      traverse(node.left);
+      traverse(node.right);
+      callback(node);
+    }
+
+    traverse(this.root);
+  }
 }
 
 // 3. Write a buildTree(array) function that takes an array of key (e.g., [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]) and turns it into a balanced binary tree full of Node objects appropriately placed (don’t forget to sort and remove duplicates!). The buildTree function should return the level-0 root node.
@@ -161,4 +204,4 @@ const array = [
 ];
 const tree = new Tree(array);
 console.log(prettyPrint(tree.root));
-tree.levelOrder((node) => console.log(node.key));
+tree.inOrder((node) => console.log(node.key));
